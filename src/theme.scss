@@ -1,0 +1,36 @@
+$background1: #2a292e;
+$background2: #242327;
+
+$text: #ededed;
+$text-faint: #afafaf;
+
+$accent1: #2db9b6;
+$accent1-text: #242327;
+
+$danger: #f95070;
+$danger-text: #242327;
+
+$warning: #ef8b4e;
+$warning-text: #242327;
+
+$border1: #929292;
+$border2: #868686;
+
+$media-phone-small: "(max-width: 320px)";
+$media-phone-medium: "(max-width: 375px)";
+
+@mixin modal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+@mixin padded {
+  padding: 40px 14px 90px 14px;
+
+  @media #{$media-phone-small} {
+    padding: 20px 8px 90px 8px;
+  }
+}

@@ -1,0 +1,77 @@
+@import './theme.scss';
+@import './directives/v-ripple.scss';
+@import '@fontsource/montserrat/100.css';
+@import '@fontsource/nunito/200.css';
+@import '@fontsource/nunito/300.css';
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/600.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/800.css';
+@import '@fontsource/nunito/900.css';
+@import '@fontsource/open-sans/300.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
+@import '@fontsource/open-sans/800.css';
+@import '@mdi/font/css/materialdesignicons.min.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  font-family: Nunito, sans-serif;
+}
+
+html {
+  font-family: sans-serif;
+  font-size: 17px;
+
+  background: $background1;
+  color: $text;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  outline: none;
+  background: $accent1;
+  color: $accent1-text;
+  font-weight: bold;
+  padding: 4px;
+  min-width: 90px;
+  min-height: 50px;
+
+  &.btn-primary-2 {
+    background: white;
+    color: $text;
+  }
+
+  &.btn-secondary {
+    background: #929292;
+    color: $text;
+  }
+
+  &.btn-danger {
+    background: $danger;
+    color: $danger-text;
+  }
+
+  &.btn-flat {
+    background: #0000;
+    color: $text;
+  }
+}
+
+textarea,
+input,
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  &:disabled {
+    background: repeating-linear-gradient(45deg, #fefefe, #fefefe 10px, #d8d8d8 10px, #d8d8d8 20px);
+  }
+}

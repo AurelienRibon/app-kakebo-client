@@ -1,0 +1,24 @@
+[
+  { "name": "courses", "icon": "mdi-cart" },
+  { "name": "voiture", "icon": "mdi-car" },
+  { "name": "culture", "icon": "mdi-book-open-variant" },
+  { "name": "maison", "icon": "mdi-home" },
+  { "name": "santé", "icon": "mdi-hospital-box" },
+  { "name": "vêtements", "icon": "mdi-hanger" },
+  { "name": "bien-être", "icon": "mdi-account-check" },
+  { "name": "famille", "icon": "mdi-account-multiple" },
+  { "name": "cadeaux", "icon": "mdi-gift" },
+  { "name": "restos", "icon": "mdi-silverware-fork-knife" },
+  { "name": "shopping", "icon": "mdi-shopping" },
+  { "name": "voyages", "icon": "mdi-airplane" },
+
+  { "name": "impots", "icon": "mdi-bank", "infrequent": true },
+  { "name": "banque", "icon": "mdi-currency-eur", "infrequent": true },
+  { "name": "école", "icon": "mdi-school", "infrequent": true },
+  { "name": "animaux", "icon": "mdi-paw", "infrequent": true },
+  { "name": "salaires", "icon": "mdi-briefcase", "infrequent": true },
+  { "name": "dons", "icon": "mdi-charity", "infrequent": true },
+  { "name": "divers", "icon": "mdi-help", "infrequent": true },
+
+  { "name": "exception", "icon": "mdi-flare", "infrequent": true, "exceptional": true }
+]

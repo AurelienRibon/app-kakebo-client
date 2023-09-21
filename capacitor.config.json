@@ -1,0 +1,16 @@
+{
+  "appId": "com.aurelienribon.kakebo",
+  "appName": "Kakebo",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}
