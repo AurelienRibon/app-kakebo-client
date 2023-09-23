@@ -142,8 +142,8 @@ async function syncExpensesWithDB(expenses: Expense[]): Promise<DbExpensesSyncRe
   const headers = { 'Content-Type': 'application/json' };
   const prod = process.env.NODE_ENV === 'production';
   const url = prod
-    ? 'https://gv3on4rtym5vnqsf3tzhehnwtm0mzhjy.lambda-url.eu-west-3.on.aws'
-    : 'https://zvpzxxtfmapliyof443jlb7i6a0aqrna.lambda-url.eu-west-3.on.aws';
+    ? 'https://kakebo.aurelienribon.repl.co/expenses/sync'
+    : 'https://kakebo.aurelienribon.repl.co/expenses/sync?dev';
 
   logInfo('Fetching remote...');
   const res = await fetch(url, { method: 'POST', headers, body });
