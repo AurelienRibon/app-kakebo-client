@@ -8,7 +8,7 @@ import { Expense, ExpenseSpec } from '../models/expense';
 type DbExpensesSyncResult = { expenses: ExpenseJSON[] };
 
 class Store {
-  #expensesAll = [] as Expense[];
+  #expensesDB = [] as Expense[];
   #expenses = ref([]) as Ref<Expense[]>;
   #loading = ref(false);
   #version = 1;
@@ -27,12 +27,12 @@ class Store {
 
   addExpense(spec: ExpenseSpec): void {
     const expense = new Expense(spec);
-    this.#expensesAll.push(expense);
+    this.#expensesDB.push(expense);
     this.refreshExpenses();
   }
 
   refreshExpenses(): void {
-    this.#expenses.value = this.#expensesAll.filter((it) => !it.deleted);
+    this.#expenses.value = this.#expensesDB.filter((it) => !it.deleted);
     sortExpenses(this.#expenses.value);
   }
 
@@ -62,7 +62,7 @@ class Store {
 
   async save(): Promise<void> {
     const value = JSON.stringify({
-      expenses: this.#expensesAll.map((it) => it.serialize()),
+      expenses: this.#expensesDB.map((it) => it.serialize()),
       version: this.#version,
     });
 
@@ -90,7 +90,7 @@ class Store {
   // ---------------------------------------------------------------------------
 
   async #syncExpenses() {
-    const syncResult = await this.#postSync(this.#expensesAll);
+    const syncResult = await this.#postSync(this.#expensesDB);
     if (!syncResult) {
       return;
     }
@@ -108,7 +108,7 @@ class Store {
   #upsertExpenseJSONs(jsons: ExpenseJSON[]): void {
     logInfo('Creating expenses from jsons...');
 
-    const knownExpensesById = new Map(this.#expensesAll.map((it) => [it.id, it]));
+    const knownExpensesById = new Map(this.#expensesDB.map((it) => [it.id, it]));
 
     for (const json of jsons) {
       try {
@@ -123,7 +123,7 @@ class Store {
   }
 
   #setExpenses(expenses: Expense[]): void {
-    this.#expensesAll = expenses;
+    this.#expensesDB = expenses;
     this.refreshExpenses();
   }
 
