@@ -95,5 +95,20 @@ export function sortExpenses(expenses: Expense[]): void {
 }
 
 function compareExpenses(e1: Expense, e2: Expense): number {
-  return e2.date.getTime() - e1.date.getTime();
+  const dateDiff = e2.date.getTime() - e1.date.getTime();
+  if (dateDiff !== 0) {
+    return dateDiff;
+  }
+
+  const categoryDiff = e1.category.localeCompare(e2.category);
+  if (categoryDiff !== 0) {
+    return categoryDiff;
+  }
+
+  const labelDiff = e1.label.localeCompare(e2.label);
+  if (labelDiff !== 0) {
+    return labelDiff;
+  }
+
+  return e2.amount - e1.amount;
 }
