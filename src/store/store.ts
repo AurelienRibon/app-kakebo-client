@@ -1,8 +1,9 @@
-import { Ref, ref } from 'vue';
 import { Preferences } from '@capacitor/preferences';
-import { Expense, ExpenseSpec } from '../models/expense';
-import { createExpenseFromJSON, createExpensesFromJSONs, ExpenseJSON, sortExpenses } from '../lib/expenses';
+import { Ref, ref } from 'vue';
+import { ExpenseJSON, createExpenseFromJSON, createExpensesFromJSONs, sortExpenses } from '../lib/expenses';
 import { logError, logInfo } from '../lib/logs';
+import { retry } from '../lib/utils';
+import { Expense, ExpenseSpec } from '../models/expense';
 
 type DbExpensesSyncResult = { expenses: ExpenseJSON[] };
 
@@ -146,7 +147,8 @@ async function syncExpensesWithDB(expenses: Expense[]): Promise<DbExpensesSyncRe
     : 'https://kakebo.aurelienribon.repl.co/expenses/sync?dev';
 
   logInfo('Fetching remote...');
-  const res = await fetch(url, { method: 'POST', headers, body });
+  const fn = () => fetch(url, { method: 'POST', headers, body });
+  const res = await retry(fn);
 
   if (!res.ok) {
     logInfo(`Request failed with status ${res.status} (${res.statusText}).`);

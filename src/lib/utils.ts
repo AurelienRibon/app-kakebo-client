@@ -31,3 +31,24 @@ export function sum(items: number[]): number {
 export function mapGroups<T, K, J>(groups: [T, K][], fn: (key: T, val: K) => J): [T, J][] {
   return groups.map((it) => [it[0], fn(it[0], it[1])]);
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function retry<T>(fn: () => Promise<T>): Promise<T> {
+  const retries = 3;
+  let error;
+
+  for (let i = retries; i >= 0; --i) {
+    try {
+      return await fn();
+    } catch (err) {
+      error = err;
+      await sleep(1000 * (retries - i + 1));
+      continue;
+    }
+  }
+
+  throw error;
+}
