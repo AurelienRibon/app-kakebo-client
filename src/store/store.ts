@@ -38,12 +38,12 @@ class Store {
 
   async loadAndSync(): Promise<void> {
     await this.load();
-    this.sync();
+    await this.sync();
   }
 
   async saveAndSync(): Promise<void> {
     await this.save();
-    this.sync();
+    await this.sync();
   }
 
   async load(): Promise<void> {
