@@ -16,8 +16,9 @@
     "prettier"
   ],
   "rules": {
+    "@typescript-eslint/ban-ts-comment": "off",
     "no-console": "error",
     "prettier/prettier": "error",
-    "vue/max-attributes-per-line": 0
+    "vue/max-attributes-per-line": "off"
   }
 }
