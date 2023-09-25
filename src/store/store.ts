@@ -13,6 +13,13 @@ class Store {
   #loading = ref(false);
   #version = 1;
 
+  // Accessors
+  // ---------------------------------------------------------------------------
+
+  get expensesDB(): Expense[] {
+    return this.#expensesDB;
+  }
+
   get expenses(): Ref<Expense[]> {
     return this.#expenses;
   }
@@ -25,6 +32,9 @@ class Store {
     return this.#version;
   }
 
+  // API
+  // ---------------------------------------------------------------------------
+
   addExpense(spec: ExpenseSpec): void {
     const expense = new Expense(spec);
     this.#expensesDB.push(expense);
@@ -33,7 +43,6 @@ class Store {
 
   refreshExpenses(): void {
     this.#expenses.value = this.#expensesDB.filter((it) => !it.deleted);
-    sortExpenses(this.#expenses.value);
   }
 
   async loadAndSync(): Promise<void> {
@@ -51,21 +60,20 @@ class Store {
 
     try {
       const { value } = await Preferences.get({ key: 'data' });
-      const spec = value ? JSON.parse(value) : { expenses: [] };
-      const specExpenses = spec.expenses as ExpenseJSON[];
-      this.#setExpenses(createExpensesFromJSONs(specExpenses));
+      const json = value ? JSON.parse(value) : { expenses: [] };
+      const jsonExpenses = json.expenses as ExpenseJSON[];
+      this.#setExpensesDB(createExpensesFromJSONs(jsonExpenses));
     } catch (err) {
       logError(err);
-      this.#setExpenses([]);
+      this.#setExpensesDB([]);
     }
   }
 
   async save(): Promise<void> {
-    const value = JSON.stringify({
-      expenses: this.#expensesDB.map((it) => it.serialize()),
-      version: this.#version,
-    });
+    logInfo('Saving expenses to store...');
 
+    const expensesJsons = this.#expensesDB.map((it) => it.serialize());
+    const value = JSON.stringify({ expenses: expensesJsons, version: this.#version });
     await Preferences.set({ key: 'data', value });
   }
 
@@ -75,8 +83,10 @@ class Store {
     this.#loading.value = true;
 
     try {
-      const changed = await this.#syncExpenses();
-      if (changed) {
+      const json = await this.#postSync();
+
+      if (json && json.expenses.length > 0) {
+        this.#upsertExpenses(json.expenses);
         await this.save();
       }
     } catch (err) {
@@ -89,24 +99,8 @@ class Store {
   // Internal API
   // ---------------------------------------------------------------------------
 
-  async #syncExpenses() {
-    const syncResult = await this.#postSync(this.#expensesDB);
-    if (!syncResult) {
-      return;
-    }
-
-    let changed = false;
-
-    if (syncResult.expenses.length > 0) {
-      this.#upsertExpenseJSONs(syncResult.expenses);
-      changed = true;
-    }
-
-    return changed;
-  }
-
-  #upsertExpenseJSONs(jsons: ExpenseJSON[]): void {
-    logInfo('Creating expenses from jsons...');
+  #upsertExpenses(jsons: ExpenseJSON[]): void {
+    logInfo(`Creating expenses from ${jsons.length} jsons...`);
 
     const knownExpensesById = new Map(this.#expensesDB.map((it) => [it.id, it]));
 
@@ -119,10 +113,14 @@ class Store {
       }
     }
 
-    this.#setExpenses(Array.from(knownExpensesById.values()));
+    const allExpenses = [...knownExpensesById.values()];
+    this.#setExpensesDB(allExpenses);
   }
 
-  #setExpenses(expenses: Expense[]): void {
+  #setExpensesDB(expenses: Expense[]): void {
+    logInfo(`Setting expensesDB to ${expenses.length} expenses...`);
+
+    sortExpenses(expenses);
     this.#expensesDB = expenses;
     this.refreshExpenses();
   }
@@ -130,11 +128,9 @@ class Store {
   // Server requests
   // ---------------------------------------------------------------------------
 
-  async #postSync(expenses: Expense[]): Promise<DbExpensesSyncResult | undefined> {
-    const body = JSON.stringify({
-      route: '/expenses/sync',
-      expenses: expenses.map((it) => it.serialize()),
-    });
+  async #postSync(): Promise<DbExpensesSyncResult | undefined> {
+    const expensesJsons = this.#expensesDB.map((it) => it.serialize());
+    const body = JSON.stringify({ expenses: expensesJsons });
 
     const headers = { 'Content-Type': 'application/json' };
     const prod = process.env.NODE_ENV === 'production';
@@ -153,7 +149,8 @@ class Store {
     }
 
     logInfo('Fetch success!');
-    return res.json();
+    const json = await res.json();
+    return json;
   }
 }
 
