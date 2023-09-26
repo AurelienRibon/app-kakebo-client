@@ -1,8 +1,8 @@
 import { Preferences } from '@capacitor/preferences';
 import { Ref, ref } from 'vue';
 import { ExpenseJSON, createExpenseFromJSON, createExpensesFromJSONs, sortExpenses } from '../lib/expenses';
+import { postJSON } from '../lib/http';
 import { logError, logInfo } from '../lib/logs';
-import { retry } from '../lib/utils';
 import { Expense, ExpenseSpec } from '../models/expense';
 
 type DbExpensesSyncResult = { expenses: ExpenseJSON[] };
@@ -130,27 +130,13 @@ class Store {
 
   async #postSync(): Promise<DbExpensesSyncResult | undefined> {
     const expensesJsons = this.#expensesDB.map((it) => it.serialize());
-    const body = JSON.stringify({ expenses: expensesJsons });
-
-    const headers = { 'Content-Type': 'application/json' };
+    const body = { expenses: expensesJsons };
     const prod = process.env.NODE_ENV === 'production';
     const url = prod
       ? 'https://kakebo.aurelienribon.repl.co/expenses/sync'
       : 'https://kakebo.aurelienribon.repl.co/expenses/sync?dev=1';
 
-    logInfo('Fetching remote...');
-    const fn = () => fetch(url, { method: 'POST', headers, body });
-    const res = await retry(fn);
-
-    if (!res.ok) {
-      logInfo(`Request failed with status ${res.status} (${res.statusText}).`);
-      logInfo(await res.text());
-      return;
-    }
-
-    logInfo('Fetch success!');
-    const json = await res.json();
-    return json;
+    return postJSON(url, body);
   }
 }
 
