@@ -1,4 +1,4 @@
-import { isDateOnFirstDayOfMonth } from '../lib/dates';
+import { formatDateToDay, isDateOnFirstDayOfMonth } from '../lib/dates';
 import { ExpensePeriodicity } from '../lib/expense-periodicities';
 import { guid } from '../lib/utils';
 import { getCategoryDef } from '../lib/categories';
@@ -152,7 +152,7 @@ export class Expense {
   serialize(): Record<string, unknown> {
     return {
       _id: this._id,
-      date: this.date.toISOString(),
+      date: formatDateToDay(this.date),
       amount: this.amount,
       category: this.category,
       label: this.label,
