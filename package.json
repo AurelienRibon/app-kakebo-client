@@ -32,7 +32,7 @@
     "@capacitor/cli": "^5.4.0",
     "@capacitor/core": "^5.4.0",
     "@capacitor/ios": "^5.4.0",
-    "@types/node": "^18.17.11",
+    "@types/node": "^18.18.0",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "@vitejs/plugin-vue": "^4.3.4",
