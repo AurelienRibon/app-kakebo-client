@@ -1,7 +1,6 @@
 import { formatDateToDay, isDateOnFirstDayOfMonth } from '../lib/dates';
 import { ExpensePeriodicity } from '../lib/expense-periodicities';
 import { guid } from '../lib/utils';
-import { getCategoryDef } from '../lib/categories';
 
 export interface ExpenseSpec {
   _id?: string;
@@ -12,6 +11,7 @@ export interface ExpenseSpec {
   periodicity?: ExpensePeriodicity;
   deleted?: boolean;
   checked?: boolean;
+  exception?: boolean;
   updatedAt?: Date;
 }
 
@@ -24,6 +24,7 @@ export class Expense {
   private _periodicity: ExpensePeriodicity;
   private _deleted: boolean;
   private _checked: boolean;
+  private _exception: boolean;
   private _updatedAt: Date;
   private _mirror: Expense | undefined;
 
@@ -36,6 +37,7 @@ export class Expense {
     this._periodicity = spec.periodicity ?? 'one-time';
     this._deleted = spec.deleted ?? false;
     this._checked = spec.checked ?? false;
+    this._exception = spec.exception ?? false;
     this._updatedAt = spec.updatedAt ?? new Date();
   }
 
@@ -74,6 +76,10 @@ export class Expense {
     return this._checked;
   }
 
+  get exception(): boolean {
+    return this._exception;
+  }
+
   get updatedAt(): Date {
     return this._updatedAt;
   }
@@ -91,10 +97,6 @@ export class Expense {
 
   isRecurring(): boolean {
     return this.periodicity !== 'one-time';
-  }
-
-  isExceptional(): boolean {
-    return getCategoryDef(this.category).exceptional ?? false;
   }
 
   getSign(): string {
@@ -122,6 +124,7 @@ export class Expense {
         case 'periodicity': target._periodicity = value; break;
         case 'deleted': target._deleted = value; break;
         case 'checked': target._checked = value; break;
+        case 'exception': target._exception = value; break;
       }
 
       target._updatedAt = new Date();
@@ -140,6 +143,7 @@ export class Expense {
       periodicity: this.periodicity,
       deleted: this.deleted,
       checked: this.checked,
+      exception: this.exception,
     });
 
     if (changes) {
@@ -159,6 +163,7 @@ export class Expense {
       periodicity: this.periodicity,
       deleted: this.deleted,
       checked: this.checked,
+      exception: this.exception,
       updatedAt: this.updatedAt.toISOString(),
     };
   }

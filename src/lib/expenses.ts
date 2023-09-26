@@ -27,9 +27,10 @@ export function createExpenseFromJSON(spec: ExpenseJSON): Expense {
   const periodicity = isExpensePeriodicityValid(spec.periodicity) ? spec.periodicity : undefined;
   const deleted = typeof spec.deleted === 'boolean' ? spec.deleted : undefined;
   const checked = typeof spec.checked === 'boolean' ? spec.checked : undefined;
+  const exception = typeof spec.exception === 'boolean' ? spec.exception : undefined;
   const updatedAt = typeof spec.updatedAt === 'string' ? new Date(spec.updatedAt) : undefined;
 
-  return new Expense({ _id, date, amount, category, label, periodicity, deleted, checked, updatedAt });
+  return new Expense({ _id, date, amount, category, label, periodicity, deleted, checked, exception, updatedAt });
 }
 
 export function createExpensesFromJSONs(specs: ExpenseJSON[]): Expense[] {

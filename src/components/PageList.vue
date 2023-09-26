@@ -143,7 +143,7 @@
       }
 
       function formatExpensesSum(expenses: Expense[]): string {
-        const expensesToSum = expenses.filter((it) => !it.isMirrorOrigin() || it.isExceptional());
+        const expensesToSum = expenses.filter((it) => !it.isMirrorOrigin() || it.exception);
         return formatAmount(sumNegativeExpenses(expensesToSum));
       }
 

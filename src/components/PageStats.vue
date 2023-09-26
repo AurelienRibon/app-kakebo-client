@@ -81,8 +81,8 @@
     },
 
     setup(props) {
-      const standardExpenses = props.expenses.filter((it) => !it.isExceptional());
-      const dailyExpenses = props.expenses.filter((it) => !it.isRecurring() && !it.isExceptional());
+      const standardExpenses = props.expenses.filter((it) => !it.exception);
+      const dailyExpenses = props.expenses.filter((it) => !it.isRecurring() && !it.exception);
 
       const monthExpenses = filterExpensesOfCurrentMonth(standardExpenses);
       const monthDebits = monthExpenses.filter((it) => it.amount < 0);

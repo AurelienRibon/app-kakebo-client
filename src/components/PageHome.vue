@@ -54,7 +54,7 @@
     },
 
     setup(props) {
-      const standardExpenses = computed(() => props.expenses.filter((it) => !it.isExceptional()));
+      const standardExpenses = computed(() => props.expenses.filter((it) => !it.exception));
       const currentExpenses = computed(() => filterExpensesOfCurrentMonth(standardExpenses.value));
       const values = computeValues(currentExpenses.value);
 
