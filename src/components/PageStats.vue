@@ -202,7 +202,6 @@
         });
 
         const categories = getCategoryDefs()
-          .filter((def) => !def.exceptional)
           .map((def) => def.name)
           .filter((cat) => dailyDebitsByMonth.some((it) => it[1].has(cat)));
 
