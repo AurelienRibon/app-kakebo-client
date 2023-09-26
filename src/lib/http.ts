@@ -7,8 +7,7 @@ export async function postJSON(url: string, content: unknown) {
 
   logInfo('Fetching remote...');
 
-  const req = { method: 'POST', headers, body, duplex: 'half' };
-  const fn = () => fetch(url, req);
+  const fn = () => fetch(url, { method: 'POST', headers, body });
   const res = await retry(fn);
 
   if (!res.ok) {
@@ -26,11 +25,20 @@ export async function postJSON(url: string, content: unknown) {
 // HELPERS
 // -----------------------------------------------------------------------------
 
-async function compressData(content: string) {
+async function compressData(content: string): Promise<Blob> {
   const bytes = new TextEncoder().encode(content);
   const cs = new CompressionStream('gzip');
   const writer = cs.writable.getWriter();
   writer.write(bytes);
   writer.close();
-  return cs.readable;
+
+  const chunks = [];
+  const reader = cs.readable.getReader();
+
+  let result;
+  while (!(result = await reader.read()).done) {
+    chunks.push(result.value);
+  }
+
+  return new Blob(chunks);
 }
