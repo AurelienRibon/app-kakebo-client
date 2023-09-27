@@ -10,13 +10,13 @@
 
     <MenuBar class="menu-bar" @select="onMenuSelect"></MenuBar>
 
-    <transition name="fade">
-      <div v-if="loading" class="loading mdi mdi-loading"></div>
-    </transition>
-
     <div v-ripple v-tap class="btn-add-expense" @tap="onBtnAddExpenseClick">
       <i class="mdi mdi-plus"></i>
     </div>
+
+    <transition name="fade">
+      <div v-if="loading" class="loading mdi mdi-loading"></div>
+    </transition>
 
     <transition name="slide">
       <AddExpense
