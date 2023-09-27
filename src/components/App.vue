@@ -8,11 +8,7 @@
       <component :is="page" class="page" :expenses="expenses" @check="onExpenseCheck" @edit="onExpenseEdit"></component>
     </keep-alive>
 
-    <MenuBar class="menu-bar" @select="onMenuSelect"></MenuBar>
-
-    <div v-ripple v-tap class="btn-add-expense" @tap="onBtnAddExpenseClick">
-      <i class="mdi mdi-plus"></i>
-    </div>
+    <MenuBar class="menu-bar" @select="onMenuSelect" @add-expense="onAddExpenseBtnClick"></MenuBar>
 
     <transition name="fade">
       <div v-if="loading" class="loading mdi mdi-loading"></div>
@@ -72,9 +68,9 @@
         editedExpense,
         expenses,
         loading,
+        onAddExpenseBtnClick,
         onAddExpenseCancel,
         onAddExpenseDone,
-        onBtnAddExpenseClick,
         onEditExpenseCancel,
         onEditExpenseDone,
         onEditExpenseRemove,
@@ -89,7 +85,7 @@
         page.value = choice;
       }
 
-      function onBtnAddExpenseClick(): void {
+      function onAddExpenseBtnClick(): void {
         state.value = 'addExpense';
       }
 
@@ -167,28 +163,6 @@
     padding-bottom: env(safe-area-inset-bottom);
     background: $background2;
     border-top: 1px solid $border1;
-  }
-
-  .btn-add-expense {
-    --btn-size: 80px;
-
-    @media #{$media-phone-small} {
-      --btn-size: 70px;
-    }
-
-    position: absolute;
-    bottom: calc(15px + env(safe-area-inset-bottom));
-    right: 15px;
-    width: var(--btn-size);
-    height: var(--btn-size);
-    line-height: var(--btn-size);
-
-    font-size: calc(var(--btn-size) - 20px);
-    text-align: center;
-    color: $background2;
-    background: $accent1;
-    border-radius: var(--btn-size);
-    box-shadow: 0 0 10px 4px $background2;
   }
 
   .panel {
