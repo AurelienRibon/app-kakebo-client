@@ -145,7 +145,7 @@
   @import '../theme.scss';
 
   main {
-    height: var(--h);
+    height: 100dvh;
     padding-top: env(safe-area-inset-top);
 
     display: flex;
@@ -241,6 +241,6 @@
 
   .slide-enter-from,
   .slide-leave-to {
-    transform: translateY(var(--h));
+    transform: translateY(100dvh);
   }
 </style>

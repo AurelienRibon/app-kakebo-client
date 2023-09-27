@@ -11,8 +11,6 @@ import './main.scss';
 let lastSyncTime = 0;
 
 setup();
-updateCSSViewportHeight();
-setTimeout(updateCSSViewportHeight, 1000);
 
 const app = createApp(App);
 app.directive('ripple', getVRippleDirective());
@@ -45,14 +43,4 @@ function setupPlatformMobile() {
       store.sync();
     }
   });
-}
-
-// -----------------------------------------------------------------------------
-// HELPERS
-// -----------------------------------------------------------------------------
-
-function updateCSSViewportHeight() {
-  if (visualViewport?.height) {
-    document.documentElement.style.setProperty('--h', `${visualViewport.height}px`);
-  }
 }
