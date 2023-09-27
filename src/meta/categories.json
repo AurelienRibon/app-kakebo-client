@@ -5,11 +5,11 @@
   { "name": "maison", "icon": "mdi-home" },
   { "name": "santé", "icon": "mdi-hospital-box" },
   { "name": "vêtements", "icon": "mdi-hanger" },
+  { "name": "sport", "icon": "mdi-basketball" },
   { "name": "bien-être", "icon": "mdi-account-check" },
   { "name": "famille", "icon": "mdi-account-multiple" },
-  { "name": "cadeaux", "icon": "mdi-gift" },
   { "name": "restos", "icon": "mdi-silverware-fork-knife" },
-  { "name": "shopping", "icon": "mdi-shopping" },
+  { "name": "cadeaux", "icon": "mdi-gift" },
   { "name": "voyages", "icon": "mdi-airplane" },
 
   { "name": "impots", "icon": "mdi-bank", "infrequent": true },
