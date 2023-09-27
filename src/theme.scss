@@ -19,14 +19,6 @@ $border2: #868686;
 $media-phone-small: "(max-width: 320px)";
 $media-phone-medium: "(max-width: 375px)";
 
-@mixin modal {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-}
-
 @mixin padded {
   padding: 40px 14px 90px 14px;
 

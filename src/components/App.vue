@@ -191,8 +191,14 @@
   }
 
   .panel {
-    @include modal;
     @include padded;
+
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
     overflow-y: auto;
     background: $background2;
     border-left: 4px solid $accent1;
