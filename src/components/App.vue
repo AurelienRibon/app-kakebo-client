@@ -145,6 +145,7 @@
   @import '../theme.scss';
 
   main {
+    position: relative;
     height: 100dvh;
     padding-top: env(safe-area-inset-top);
 
@@ -160,7 +161,7 @@
   .menu-bar {
     height: calc(70px + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
@@ -175,7 +176,7 @@
       --btn-size: 70px;
     }
 
-    position: fixed;
+    position: absolute;
     bottom: calc(15px + env(safe-area-inset-bottom));
     right: 15px;
     width: var(--btn-size);
@@ -206,7 +207,7 @@
   }
 
   .loading {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 10px;
     font-size: 40px;
