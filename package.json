@@ -18,6 +18,7 @@
     "@capacitor/device": "^5.0.6",
     "@capacitor/keyboard": "^5.0.6",
     "@capacitor/preferences": "^5.0.6",
+    "@capacitor/splash-screen": "^5.0.6",
     "@fontsource/montserrat": "^4.0.1",
     "@fontsource/nunito": "^4.0.1",
     "@fontsource/open-sans": "^4.0.1",

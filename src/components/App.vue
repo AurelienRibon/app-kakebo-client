@@ -41,7 +41,8 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
-  import { defineComponent, Ref, ref } from 'vue';
+  import { SplashScreen } from '@capacitor/splash-screen';
+  import { defineComponent, onMounted, Ref, ref } from 'vue';
   import { Expense } from '../models/expense';
   import { ExpenseJSON } from '../lib/expenses';
   import { store } from '../store/store';
@@ -63,6 +64,10 @@
       const editedExpense = ref(new Expense()) as Ref<Expense>;
       const expenses = store.expenses;
       const loading = store.loading;
+
+      onMounted(() => {
+        SplashScreen.hide();
+      });
 
       return {
         editedExpense,
