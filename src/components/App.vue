@@ -146,8 +146,11 @@
 
   main {
     position: relative;
+    width: 100dvw;
     height: 100dvh;
+
     padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 
     display: flex;
     flex-direction: column;
@@ -159,12 +162,9 @@
   }
 
   .menu-bar {
-    height: calc(70px + env(safe-area-inset-bottom));
+    flex: 0;
+    flex-basis: calc(70px + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background: $background2;
     border-top: 1px solid $border1;
   }
