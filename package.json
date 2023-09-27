@@ -5,7 +5,7 @@
   "main": "src/index.html",
   "scripts": {
     "dev": "vite --port 4356",
-    "build": "vite build && cap copy",
+    "build": "vite build && cap sync",
     "lint": "eslint 'src/**/*.{js,ts,vue}'"
   },
   "author": "Aurelien Ribon <aurelien.ribon@gmail.com>",
