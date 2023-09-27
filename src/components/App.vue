@@ -145,9 +145,6 @@
     width: 100dvw;
     height: 100dvh;
 
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-
     display: flex;
     flex-direction: column;
   }
@@ -155,6 +152,7 @@
   .page {
     flex: 1;
     overflow-y: scroll;
+    padding-top: env(safe-area-inset-top);
   }
 
   .menu-bar {
