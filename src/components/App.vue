@@ -157,7 +157,7 @@
   .page {
     flex: 1;
     overflow-y: scroll;
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(env(safe-area-inset-top) + 20px);
   }
 
   .menu-bar {
