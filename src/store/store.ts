@@ -131,7 +131,7 @@ class Store {
   async #postSync(): Promise<DbExpensesSyncResult | undefined> {
     const expensesJsons = this.#expensesDB.map((it) => it.serialize());
     const body = { expenses: expensesJsons };
-    const prod = process.env.NODE_ENV === 'production';
+    const prod = import.meta.env.PROD;
     const url = prod
       ? 'https://kakebo.aurelienribon.repl.co/expenses/sync'
       : 'https://kakebo.aurelienribon.repl.co/expenses/sync?dev=1';
