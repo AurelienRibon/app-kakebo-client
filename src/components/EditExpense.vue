@@ -18,7 +18,7 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { Ref, defineComponent, ref } from 'vue';
   import { Expense } from '../models/expense';
   import ButtonsGroup from './ButtonsGroup.vue';
   import ExpenseDetails from './ExpenseDetails.vue';
@@ -36,7 +36,7 @@
     emits: ['cancel', 'remove', 'done'],
 
     setup(props, { emit }) {
-      const refDetails = ref(null);
+      const refDetails = ref() as Ref<InstanceType<typeof ExpenseDetails>>;
 
       return { cancel, remove, done, refDetails };
 
@@ -49,8 +49,7 @@
       }
 
       function done(): void {
-        const el = refDetails.value as typeof ExpenseDetails | null;
-        emit('done', el && el.bundle());
+        emit('done', refDetails.value!.bundle());
       }
     },
   });

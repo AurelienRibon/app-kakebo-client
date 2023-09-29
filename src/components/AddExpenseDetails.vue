@@ -15,7 +15,7 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { Ref, defineComponent, ref } from 'vue';
   import { config } from '../models/config';
   import { Expense } from '../models/expense';
   import ButtonsGroup from './ButtonsGroup.vue';
@@ -38,7 +38,7 @@
       const durationSinceLastInput = Date.now() - config.lastExpenseAt;
       const expenseDate = durationSinceLastInput < 1000 * 60 * 10 ? config.lastExpenseDate : undefined;
       const expense = new Expense({ category: props.category, date: expenseDate });
-      const refDetails = ref(null);
+      const refDetails = ref() as Ref<InstanceType<typeof ExpenseDetails>>;
 
       return { cancel, done, expense, refDetails };
 
@@ -47,8 +47,7 @@
       }
 
       function done(): void {
-        const el = refDetails.value as typeof ExpenseDetails | null;
-        const expenseSpec = el?.bundle();
+        const expenseSpec = refDetails.value!.bundle();
         config.lastExpenseDate = expenseSpec.date;
         config.lastExpenseAt = Date.now();
         emit('done', expenseSpec);

@@ -68,13 +68,13 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref, computed } from 'vue';
+  import { defineComponent, onMounted, ref, computed, Ref } from 'vue';
   import { addDigitToAmount, formatAmount } from '../lib/amounts';
   import { formatDateToDay } from '../lib/dates';
   import { getCategoryDefs } from '../lib/categories';
   import { extractExpensesLabels } from '../lib/expenses';
   import { hideKeyboard } from '../lib/dom';
-  import { Expense, ExpenseSpec } from '../models/expense';
+  import { Expense } from '../models/expense';
   import { store } from '../store/store';
 
   export default defineComponent({
@@ -91,7 +91,7 @@
       },
     },
 
-    setup(props) {
+    setup(props, { expose }) {
       // Expense properties
       const date = ref(formatDateToDay(props.expense.date));
       const periodicity = ref(props.expense.periodicity);
@@ -104,15 +104,18 @@
       // Misc values
       const categories = getCategoryDefs();
       const labels = computed(() => extractExpensesLabels(store.expenses.value, category.value));
-      const refAmount = ref(null);
+      const refAmount = ref() as Ref<HTMLInputElement>;
       const seeMore = ref(props.full);
 
       if (props.autofocus) {
         onMounted(focusAmount);
       }
 
+      expose({ bundle });
+
       return {
         amount,
+        bundle,
         categories,
         category,
         checked,
@@ -159,24 +162,19 @@
       }
 
       function focusAmount() {
-        const el = refAmount.value as HTMLElement | null;
-        if (el) {
-          el.focus();
-        }
+        refAmount.value?.focus();
       }
-    },
 
-    methods: {
-      bundle(): ExpenseSpec {
+      function bundle() {
         return {
-          category: this.category,
-          amount: Number(this.amount) * (this.sign === '-' ? -1 : +1),
-          date: new Date(this.date),
-          label: this.label,
-          periodicity: this.periodicity,
-          checked: this.checked,
+          category: category.value,
+          amount: Number(amount.value) * (sign.value === '-' ? -1 : +1),
+          date: new Date(date.value),
+          label: label.value,
+          periodicity: periodicity.value,
+          checked: checked.value,
         };
-      },
+      }
     },
   });
 </script>
