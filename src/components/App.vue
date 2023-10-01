@@ -160,8 +160,8 @@
 
   main {
     position: relative;
-    width: 100dvw;
-    height: 100dvh;
+    width: 100vw;
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -238,6 +238,6 @@
 
   .slide-enter-from,
   .slide-leave-to {
-    transform: translateY(100dvh);
+    transform: translateY(100vh);
   }
 </style>
