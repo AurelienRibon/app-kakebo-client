@@ -5,10 +5,17 @@
 <template>
   <main>
     <keep-alive>
-      <component :is="page" class="page" :expenses="expenses" @check="onExpenseCheck" @edit="onExpenseEdit"></component>
+      <component
+        :is="page"
+        ref="pageRef"
+        class="page"
+        :expenses="expenses"
+        @check="onExpenseCheck"
+        @edit="onExpenseEdit"
+      ></component>
     </keep-alive>
 
-    <MenuBar class="menu-bar" @select="onMenuSelect" @add-expense="onAddExpenseBtnClick"></MenuBar>
+    <MenuBar class="menu-bar" :page="page" @select="onMenuSelect" @do-action="onBtnActionClick"></MenuBar>
 
     <transition name="fade">
       <div v-if="loading" class="loading mdi mdi-loading"></div>
@@ -43,22 +50,23 @@
 <script lang="ts">
   import { SplashScreen } from '@capacitor/splash-screen';
   import { defineComponent, onMounted, Ref, ref } from 'vue';
-  import { Expense } from '../models/expense';
   import { ExpenseJSON } from '../lib/expenses';
+  import { Expense } from '../models/expense';
   import { store } from '../store/store';
   import AddExpense from './AddExpense.vue';
   import EditExpense from './EditExpense.vue';
-  import PageHome from './PageHome.vue';
-  import PageStats from './PageStats.vue';
-  import PageList from './PageList.vue';
   import MenuBar from './MenuBar.vue';
+  import PageHome from './PageHome.vue';
+  import PageList from './PageList.vue';
+  import PageQuery from './PageQuery.vue';
 
   type State = 'idle' | 'addExpense' | 'editExpense';
 
   export default defineComponent({
-    components: { PageHome, PageStats, PageList, MenuBar, AddExpense, EditExpense },
+    components: { PageHome, PageQuery, PageList, MenuBar, AddExpense, EditExpense },
 
     setup() {
+      const pageRef = ref() as Ref<InstanceType<typeof PageQuery>>;
       const page = ref('PageHome') as Ref<string>;
       const state = ref('idle') as Ref<State>;
       const editedExpense = ref(new Expense()) as Ref<Expense>;
@@ -73,7 +81,7 @@
         editedExpense,
         expenses,
         loading,
-        onAddExpenseBtnClick,
+        onBtnActionClick,
         onAddExpenseCancel,
         onAddExpenseDone,
         onEditExpenseCancel,
@@ -83,6 +91,7 @@
         onExpenseEdit,
         onMenuSelect,
         page,
+        pageRef,
         state,
       };
 
@@ -90,8 +99,12 @@
         page.value = choice;
       }
 
-      function onAddExpenseBtnClick(): void {
-        state.value = 'addExpense';
+      function onBtnActionClick(): void {
+        if (page.value === 'PageQuery') {
+          pageRef.value?.runQuery();
+        } else {
+          state.value = 'addExpense';
+        }
       }
 
       function onAddExpenseCancel(): void {

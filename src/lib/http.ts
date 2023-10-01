@@ -1,11 +1,32 @@
 import { logInfo } from './logs';
 import { retry } from './utils';
 
-export async function postJSON(url: string, content: unknown) {
-  const body = await compressData(JSON.stringify(content));
-  const headers = { 'Content-Type': 'application/json', 'Content-Encoding': 'gzip' };
+type Request = {
+  data: unknown;
+  gzip?: boolean;
+  headers?: Headers;
+};
 
-  logInfo('Fetching remote...');
+type Headers = Record<string, string>;
+
+export async function postJSON(url: string, request: Request) {
+  if (url.startsWith('/')) {
+    url = `https://kakebo.aurelienribon.repl.co${url}`;
+
+    if (!import.meta.env.PROD) {
+      url += url.includes('?') ? '&dev=1' : '?dev=1';
+    }
+  }
+
+  const headers = { 'Content-Type': 'application/json', ...request.headers } as Headers;
+  let body = JSON.stringify(request.data) as any;
+
+  if (request.gzip) {
+    headers['Content-Encoding'] = 'gzip';
+    body = await compressData(body);
+  }
+
+  logInfo(`Fetching ${url}`);
 
   const fn = () => fetch(url, { method: 'POST', headers, body });
   const res = await retry(fn);

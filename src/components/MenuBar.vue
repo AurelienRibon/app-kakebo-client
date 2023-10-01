@@ -14,13 +14,13 @@
       <span>liste</span>
     </div>
 
-    <div v-ripple v-tap class="menu-item" @tap="select('PageStats')">
-      <i class="mdi mdi-chart-bar"></i>
-      <span>stats</span>
+    <div v-ripple v-tap class="menu-item" @tap="select('PageQuery')">
+      <i class="mdi mdi-database-search"></i>
+      <span>requêtes</span>
     </div>
 
-    <div v-ripple v-tap class="btn-add-expense" @tap="onBtnAddExpenseClick">
-      <i class="mdi mdi-plus"></i>
+    <div v-ripple v-tap class="btn-action" :class="actionClass" @tap="doAction">
+      <i class="mdi" :class="actionIconClass"></i>
     </div>
   </div>
 </template>
@@ -30,20 +30,30 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   export default defineComponent({
-    emits: ['select', 'addExpense'],
+    props: {
+      page: {
+        type: String,
+        required: true,
+      },
+    },
+
+    emits: ['select', 'doAction'],
 
     setup(props, ctx) {
-      return { select, onBtnAddExpenseClick };
+      const actionClass = computed(() => (props.page === 'PageQuery' ? 'action-query' : ''));
+      const actionIconClass = computed(() => (props.page === 'PageQuery' ? 'mdi-magnify' : 'mdi-plus'));
+
+      return { actionClass, actionIconClass, doAction, select };
+
+      function doAction(): void {
+        ctx.emit('doAction');
+      }
 
       function select(name: string) {
         ctx.emit('select', name);
-      }
-
-      function onBtnAddExpenseClick(): void {
-        ctx.emit('addExpense');
       }
     },
   });
@@ -76,7 +86,7 @@
     }
   }
 
-  .btn-add-expense {
+  .btn-action {
     --btn-size: 80px;
 
     @media #{$media-phone-small} {
@@ -93,8 +103,13 @@
     font-size: calc(var(--btn-size) - 20px);
     text-align: center;
     color: $background2;
-    background: $accent1;
+    background-color: $accent1;
     border-radius: var(--btn-size);
     box-shadow: 0 0 10px 4px $background2;
+    transition: background-color 0.2s ease;
+
+    &.action-query {
+      background-color: #b92d99;
+    }
   }
 </style>
