@@ -28,7 +28,7 @@
       />
 
       <label for="result">Résultat</label>
-      <div id="result" ref="refResult" class="input-code result" />
+      <div id="result" ref="refResult" class="input-text result">{{ result }}</div>
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@
 <!-- ----------------------------------------------------------------------- -->
 
 <script lang="ts">
+  import { Keyboard } from '@capacitor/keyboard';
   import { PropType, Ref, defineComponent, ref } from 'vue';
   import { askGPT } from '../ai/api';
   import * as prompts from '../ai/prompts';
@@ -57,13 +58,25 @@
     setup(props) {
       const selection = ref('question') as Ref<Selection>;
       const question = ref('Quelle est ma dernière dépense ?') as Ref<string>;
-      const query = ref('SELECT * FROM %expenses%\nWHERE deleted = False\nORDER BY date\nLIMIT 1') as Ref<string>;
+      const query = ref('') as Ref<string>;
+      const result = ref('') as Ref<string>;
 
       const refQuery = ref() as Ref<HTMLTextAreaElement>;
       const refQuestion = ref() as Ref<HTMLTextAreaElement>;
       const refResult = ref() as Ref<HTMLDivElement>;
 
-      return { query, question, refQuery, refQuestion, refResult, runQuery, selection, onQuestionFocus, onQueryFocus };
+      return {
+        query,
+        question,
+        result,
+        refQuery,
+        refQuestion,
+        refResult,
+        runQuery,
+        selection,
+        onQuestionFocus,
+        onQueryFocus,
+      };
 
       function onQuestionFocus() {
         refQuestion.value.select();
@@ -76,27 +89,44 @@
       }
 
       async function runQuery() {
-        if (selection.value === 'question') {
-          refQuery.value.classList.add('progress');
+        Keyboard.hide();
+        refQuery.value.classList.add('progress');
+        refResult.value.classList.add('progress');
 
-          const categories = props.expenses.map((e) => `'${e.category}'`).join(', ');
-          const prompt = prompts.questionToQuery.replace('{{categories}}', categories);
-          query.value = await askGPT([prompt, question.value]);
+        const categories = computeCategoriesList(props.expenses);
 
-          refQuery.value.classList.remove('progress');
-          refQuery.value.focus();
-        } else {
-          refResult.value.classList.add('progress');
+        query.value = await executeQuestion(categories, question.value);
+        refQuery.value.classList.remove('progress');
 
-          const query = refQuery.value.value;
-          const rows = await postJSON('/expenses/query', { data: { query } });
-
-          refResult.value.innerHTML = JSON.stringify(rows, null, 2);
-          refResult.value.classList.remove('progress');
-        }
+        result.value = await executeQuery(categories, question.value, query.value);
+        refResult.value.classList.remove('progress');
       }
     },
   });
+
+  // HELPERS
+  // ---------------------------------------------------------------------------
+
+  async function executeQuestion(categories: string, question: string) {
+    const chat = [...prompts.questionToQuery];
+    chat[0] = chat[0].replaceAll('{{categories}}', categories);
+    chat[1] = chat[1].replaceAll('{{question}}', question);
+    return askGPT(chat);
+  }
+
+  async function executeQuery(categories: string, question: string, query: string) {
+    const rows = await postJSON('/expenses/query', { data: { query } });
+    const chat = [...prompts.rowsToAnswer];
+    chat[1] = chat[1].replaceAll('{{categories}}', categories);
+    chat[1] = chat[1].replaceAll('{{question}}', question);
+    chat[1] = chat[1].replaceAll('{{rows}}', JSON.stringify(rows, null, 2));
+    return askGPT(chat);
+  }
+
+  function computeCategoriesList(expenses: Expense[]) {
+    const categories = [...new Set(expenses.map((e) => e.category))];
+    return categories.map((it) => `'${it}'`).join(', ');
+  }
 </script>
 
 <!-- ----------------------------------------------------------------------- -->

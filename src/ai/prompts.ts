@@ -1,4 +1,30 @@
-export const questionToQuery = `You are an SQL expert, knowing every details of DuckDB databases.
+export const rowsToAnswer = [
+  `You are an SQL expert, knowing every details of DuckDB databases.`,
+
+  `I asked this question to my database: {{question}}
+
+The JSON result I got from the database is the following:
+\`\`\`
+{{rows}}
+\`\`\`
+
+My database has a single table, "Expenses", with the following columns:
+  - _id (VARCHAR) PRIMARY KEY
+  - date (DATE) : the date of the expense
+  - amount (DOUBLE) : the amount of the expense, negative for expenses, positive for incomes
+  - category (VARCHAR) : {{categories}}
+  - label (VARCHAR) : any text
+  - periodicity (VARCHAR) : can be 'monthly' or 'one-time'.
+  - checked (BOOLEAN) : if the expense has been validated on the bank account
+  - deleted (BOOLEAN) : if the expense has been deleted
+  - exception (BOOLEAN) : if the expense is exceptional and not counted in the budget
+  - updatedAt (TIMESTAMP) : the last time the expense entry has been updated, in UTC timezone
+
+Formulate a written answer to the initial question, in French, using the data from the database.`,
+];
+
+export const questionToQuery = [
+  `You are an SQL expert, knowing every details of DuckDB databases.
 The user will ask you a question about the database, and you have to generate an SQL query to answer it.
 Only respond with the SQL query, do not add any other text nor markdown tags.
 
@@ -16,7 +42,7 @@ The CSV file has the following columns:
   - checked (BOOLEAN) : if the expense has been validated on the bank account
   - deleted (BOOLEAN) : if the expense has been deleted
   - exception (BOOLEAN) : if the expense is exceptional and not counted in the budget
-  - updatedAt (TIMESTAMP) : the last time the expense entry has been updated
+  - updatedAt (TIMESTAMP) : the last time the expense entry has been updated, in UTC timezone
 
 Unless requested otherwise, never include deleted expenses in the results.
 Unless requested otherwise, never include exceptional expenses in the results.
@@ -50,4 +76,7 @@ Example: How much do I save per month?
   FROM %expenses%
   WHERE deleted = False AND exception = False
   GROUP BY year, month
-  ORDER BY year, month`;
+  ORDER BY year, month`,
+
+  `{{question}}`,
+];
